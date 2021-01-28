@@ -3,12 +3,14 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
+//  Routes import
+const homeRoute = require('./routes/home');
+const validationRoute = require('./routes/validation');
+
+//  Body parser
 app.use(bodyParser.urlencoded());
 
-
-app.use('/', (req, res, next) => {
-    console.log('In the middleware 2');
-    res.send('<h1>Hello from express');
-});
+app.use(homeRoute);
+app.use(validationRoute);
 
 app.listen(3000);
