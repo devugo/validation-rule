@@ -1,0 +1,20 @@
+{
+  "name": "nodejs-validation-rule",
+  "version": "1.0.0",
+  "description": "Validation rule for nodejs app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "Ezenwankwo",
+    "Ugochukwu"
+  ],
+  "author": "Ezenwankwo Ugochukwu",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  }
+}
