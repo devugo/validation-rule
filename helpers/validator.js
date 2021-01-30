@@ -13,11 +13,17 @@ exports.conditions = [
 // Validator function
 exports.validate = (body) => {
     //  VALIDATE DATA STRUCTURE
-    
+
     // Validate required fields
     let validateRequiredFields = requiredFields(body);
     if (validateRequiredFields.code !== 200){
         return validateRequiredFields;
+    }
+
+    //  Validate data type fields
+    let validateDataTypeFields = dataTypeFields(body);
+    if(validateDataTypeFields.code !== 200){
+        return validateDataTypeFields
     }
 }
 
@@ -32,6 +38,22 @@ const requiredFields = (body) => {
     }
     if(!body.data){
         return dataStructureMessage(400, 'data is required.');
+    }
+
+    return dataStructureMessage(200);
+}
+
+/**
+ * Validate fields data type to ensure what was sent is what's expected for both the rule and data fields
+ * 
+ * @param {Request body} body 
+ */
+const dataTypeFields = (body) => {
+    if(typeof(body.rule) !== 'object'){
+        return dataStructureMessage(400, 'rule should be an object');
+    }
+    if(typeof(body.data) !== 'object' && typeof(body.data) !== 'string'){
+        return dataStructureMessage(400, 'data should be an object or an array or a string');
     }
 
     return dataStructureMessage(200);
