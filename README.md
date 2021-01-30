@@ -1,20 +1,24 @@
-NODEJS Rule Validation API For Flutterwave BE Role
+NODE JS Rule Validation API For Flutterwave BE Role
 ===================================================
 
-This is a nodejs api for flutterwave Backend role
+This is a Node JS api for flutterwave Backend role
 
 ### API ROUTES
 
 ### Get profile
 ```http
-GET /
+GET https://rule-validation-by-devugo.herokuapp.com/
 ```
 
 ### Validate enpoint proper
 ```http
-POST /validate-rule
-```
+POST https://rule-validation-by-devugo.herokuapp.com/validate-rule
 
+// Headers
+{
+    "Content-Type": "application/json"
+}
+```
 
 
 ### Responses
