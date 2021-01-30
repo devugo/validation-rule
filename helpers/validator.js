@@ -22,6 +22,12 @@ exports.validate = (body) => {
     if(validatePayloadValidity.code !== 200){
         return validatePayloadValidity
     }
+
+    //  Vcalidate field rule existence
+    let validateFieldRuleExistance = FieldRuleExist(body);
+    if(validateFieldRuleExistance.code !== 200){
+        return validateFieldRuleExistance;
+    }
 }
 
 // validation conditions
@@ -66,7 +72,7 @@ const dataTypeFields = (body) => {
 }
 
 /**
- * Validate invalid JSON payload
+ * Validate validity of JSON payload
  * 
  * @param {Request body} body 
  */
@@ -93,4 +99,46 @@ const dataStructureMessage = (code, message = null) => {
         },
         code: code
     }
+}
+
+/**
+ * Check if field in rule exists in data object
+ * 
+ * @param {Request body} body 
+ */
+const FieldRuleExist = (body) => {
+    // get rule field
+    let ruleField = body.rule.field; 
+
+    // Gtt reduced data field value
+    let fieldValue = reduceDataField(body);
+    // console.log(fieldValue);
+
+    if(!fieldValue){
+        // if(!Array.isArray(body.data) && !fieldValue){
+        return dataStructureMessage(400, `field ${ruleField} is missing from data.`);
+    }
+
+    return dataStructureMessage(200);
+}
+
+/**
+ * Reduce data field to get the value
+ * 
+ * @param {Request body data} body 
+ */
+const reduceDataField = (body) => {
+    // get rule field
+    let ruleField = body.rule.field; 
+    //  Convert rule field to array, using '.' as the reducer
+    let ruleFieldArr = ruleField.split('.');
+
+    let fieldValue = body.data;
+    // Loop through rule field array and check for the existence of the field in data
+    for(var i = 0; i < ruleFieldArr.length; i++){
+        fieldValue = fieldValue[ruleFieldArr[i]];
+        // console.log(fieldValue);
+    }
+
+    return fieldValue;
 }
