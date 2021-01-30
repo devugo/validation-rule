@@ -1,5 +1,5 @@
 exports.getMyDetails = (req, res, next) => {
-    res.json({
+    res.status(200).json({
         "message": "My Rule-Validation API",
         "status": "success",
         "data": {
