@@ -28,6 +28,9 @@ exports.validate = (body) => {
     if(validateFieldRuleExistance.code !== 200){
         return validateFieldRuleExistance;
     }
+
+    //  Return final valdation outcome
+    return validateProper(body)
 }
 
 // validation conditions
@@ -115,7 +118,6 @@ const FieldRuleExist = (body) => {
     // console.log(fieldValue);
 
     if(!fieldValue){
-        // if(!Array.isArray(body.data) && !fieldValue){
         return dataStructureMessage(400, `field ${ruleField} is missing from data.`);
     }
 
@@ -137,8 +139,106 @@ const reduceDataField = (body) => {
     // Loop through rule field array and check for the existence of the field in data
     for(var i = 0; i < ruleFieldArr.length; i++){
         fieldValue = fieldValue[ruleFieldArr[i]];
-        // console.log(fieldValue);
+        if(fieldValue == null){
+            break;
+        }
     }
 
     return fieldValue;
+}
+
+// Final validation for the conditions
+const validateProper = (body) => {
+    let passed = false;
+    
+    // Get condition
+    let condition = conditions.indexOf(body.rule.condition);
+    let field = body.rule.field;
+    let conditionValue = body.rule.condition_value;
+    let fieldValue = reduceDataField(body);;
+
+    switch (condition) {
+        // eq
+        case 0: 
+            passed = passEqualTo(conditionValue, fieldValue);
+            break;
+        // neq
+        case 1: 
+            passed = passNotEqualTo(conditionValue, fieldValue);
+            break;
+        // gt
+        case 2: 
+            passed = passGreaterThan(conditionValue, fieldValue)
+            break;
+        // gte
+        case 3: 
+            passed = passGreaterThanAndEqualTo(conditionValue, fieldValue);
+            break;
+        // contains
+        case 4: 
+            passed = passContains(conditionValue, fieldValue);
+            break;
+    }
+
+   //   Return validator response 
+    return validatorResponse(passed ? 200 : 400, field, fieldValue, body.rule.condition, conditionValue);
+}
+
+// contains function
+const passContains = (conditionValue, fieldValue) => {
+    // if(fieldValue.indexOf(conditionValue) === -1){
+    //     return false;
+    // }
+    // return true;
+
+    return fieldValue.indexOf(conditionValue) !== -1;
+}
+
+// eq function
+const passEqualTo = (conditionValue, fieldValue) => {
+    return fieldValue === conditionValue;
+}
+
+// neq function
+const passNotEqualTo = (conditionValue, fieldValue) => {
+    return fieldValue !== conditionValue;
+}
+
+// gt function
+const passGreaterThan = (conditionValue, fieldValue) => {
+    return fieldValue > conditionValue;
+}
+
+// gte function
+const passGreaterThanAndEqualTo = (conditionValue, fieldValue) => {
+    return fieldValue >= conditionValue;
+}
+
+
+/**
+ * Validator response object base don status code passed
+ * 
+ * @param {status code} code 
+ * @param {field name} field 
+ * @param {field value on data} fieldValue 
+ * @param {condition validation was carried on} condition 
+ * @param {condition value } conditionValue 
+ */
+const validatorResponse = (code, field, fieldValue, condition, conditionValue) => {
+    return {
+        details: {
+            "message": code === 200 ? `field ${field} successfully validated.` : `field ${field} failed validation.`,
+            "status": code === 200 ? "success" : "error",
+            "data": {
+                "validation": {
+                    "error": code === 200 ? false : true,
+                    "field": field,
+                    "field_value": fieldValue,
+                    "condition": condition,
+                    "condition_value": conditionValue
+                }
+            }
+        },
+        code: code
+    }
 }
