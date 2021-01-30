@@ -1,38 +1,5 @@
 // VALIDATION HELPER FUNCTIONS
 
-// Validator function
-exports.validate = (body) => {
-
-    //  VALIDATE DATA STRUCTURE
-
-    // Validate required fields
-    let validateRequiredFields = requiredFields(body);
-    if (validateRequiredFields.code !== 200){
-        return validateRequiredFields;
-    }
-
-    //  Validate data type fields
-    let validateDataTypeFields = dataTypeFields(body);
-    if(validateDataTypeFields.code !== 200){
-        return validateDataTypeFields
-    }
-
-    //  Validate payload validity
-    let validatePayloadValidity = payloadType(body);
-    if(validatePayloadValidity.code !== 200){
-        return validatePayloadValidity
-    }
-
-    //  Vcalidate field rule existence
-    let validateFieldRuleExistance = FieldRuleExist(body);
-    if(validateFieldRuleExistance.code !== 200){
-        return validateFieldRuleExistance;
-    }
-
-    //  Return final valdation outcome
-    return validateProper(body)
-}
-
 // validation conditions
 const conditions = [
     'eq',
@@ -241,4 +208,39 @@ const validatorResponse = (code, field, fieldValue, condition, conditionValue) =
         },
         code: code
     }
+}
+
+
+
+// Validator function
+exports.validate = (body) => {
+
+    //  VALIDATE DATA STRUCTURE
+
+    // Validate required fields
+    let validateRequiredFields = requiredFields(body);
+    if (validateRequiredFields.code !== 200){
+        return validateRequiredFields;
+    }
+
+    //  Validate data type fields
+    let validateDataTypeFields = dataTypeFields(body);
+    if(validateDataTypeFields.code !== 200){
+        return validateDataTypeFields
+    }
+
+    //  Validate payload validity
+    let validatePayloadValidity = payloadType(body);
+    if(validatePayloadValidity.code !== 200){
+        return validatePayloadValidity
+    }
+
+    //  Vcalidate field rule existence
+    let validateFieldRuleExistance = FieldRuleExist(body);
+    if(validateFieldRuleExistance.code !== 200){
+        return validateFieldRuleExistance;
+    }
+
+    //  Return final valdation outcome
+    return validateProper(body)
 }
