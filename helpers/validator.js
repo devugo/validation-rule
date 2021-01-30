@@ -65,10 +65,10 @@ const requiredFields = (body) => {
  */
 const dataTypeFields = (body) => {
     if(typeof(body.rule) !== 'object'){
-        return dataStructureMessage(400, 'rule should be an object');
+        return dataStructureMessage(400, 'rule should be an object.');
     }
     if(typeof(body.data) !== 'object' && typeof(body.data) !== 'string'){
-        return dataStructureMessage(400, 'data should be an object or an array or a string');
+        return dataStructureMessage(400, 'data should be an object or an array or a string.');
     }
 
     return dataStructureMessage(200);
